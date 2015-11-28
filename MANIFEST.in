@@ -1,0 +1,3 @@
+recursive-include multi_archivo/comunes *
+recursive-include ./docs *
+# recursive-exclude multi_archivo/old *

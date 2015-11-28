@@ -1,0 +1,2 @@
+source ~/.bashrc
+source ~/PycharmProjects/multi_archivo/venv/bin/activate
