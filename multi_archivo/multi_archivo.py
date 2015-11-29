@@ -11,7 +11,6 @@ from Tkinter import *
 # Establece la ruta del archivo y la añade al path (solucioné problemas de importación de mis módulos)
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 #print "PATH: %s" % sys.path
-# sys.path.append(os.path.dirname(__file__) + "/relative/path/to/module")
 
 #import FunctionsDef as fd
 import ClasesGui as CG
@@ -22,7 +21,6 @@ def main():
 
     # Parametros iniciales: Directorio del usuario y Ruta archivo de configuración
     home = os.path.expanduser("~")
-    #arch_conf = './comunes/multi-archivo.conf'
 
     # Directorio del paquete
     package_dir = os.path.dirname(os.path.abspath(__file__))
@@ -32,22 +30,21 @@ def main():
     os.chdir(package_dir)
     #print "current: %s" % os.getcwd()
 
-    arch_conf = os.path.join(package_dir, 'comunes/multi-archivo.conf')
+    arch_conf = os.path.join(package_dir, 'comunes/multi_archivo.conf')
     #print 'arch_conf: %s' % arch_conf
-    #/.shell_scripts/archivo-pdf/comunes/multi-archivo.conf
-    #patt_conf = home + '/PycharmProjects/archivo-pdf/comunes/patterns.conf'
-    #patt_conf = './comunes/patterns.conf'
+
     patt_conf = os.path.join(package_dir, 'comunes/patterns.conf')
     #print 'patt_conf: %s' % patt_conf
-    #/.shell_scripts/archivo-pdf/comunes/patterns.conf
 
     # Establezco un objeto logger y su nombre
     #logger = logging.getLogger(__name__)
-    logger = logging.getLogger('multi-archivo')
+    logger = logging.getLogger('multi_archivo')
     # Establezco los parámetros de configuración del log
     log_level = logging.INFO  # Niveles del log: CRITICAL, ERROR, WARNING, INFO, DEBUG
     #log_filename = '/home/scale/.shell_scripts/log/' + os.path.splitext(__file__)[0] + ".log"   # Nombre del archivo de log
-    log_filename = home + '/.shell_scripts/log/' + os.path.basename(os.path.splitext(__file__)[0]) + ".log"   # Nombre del archivo de log
+    modulename = os.path.basename(os.path.splitext(__file__)[0])    # Nombre del archivo / modulo. multi_archivo
+    log_filename = home + '/.config/' + modulename + '/' + modulename + ".log"   # Nombre del archivo de log
+    print "log_filename: %s" % log_filename
     log_filemode = "w"  # a -> agrega al final, w -> reemplaza (sobreescribe)
     log_format = "%(asctime)s - [%(levelname)s]: [%(module)s - %(funcName)s - %(lineno)d] %(message)s"
     # asctime  - %(lineno)d  - %(name)s

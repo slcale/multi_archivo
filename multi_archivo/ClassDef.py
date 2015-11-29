@@ -14,8 +14,6 @@ import ClasesGui as CG
 
 # Establezco un objeto logger y su nombre
 logger = logging.getLogger(__name__)
-#logger = logging.getLogger('multi-archivo')
-
 
 #log_format = "%(asctime)s - %(name)s - [%(levelname)s]: [Sarasa %(module)s -  - %(funcName)s] %(message)s"    # asctime
 #log_datefmt = "%Y-%m-%d %H:%M:%S"
@@ -155,7 +153,7 @@ class MenuCommands():
             tkMessageBox.showinfo("Información", "No se seleccionó ningún archivo")
 
     def gdir_magic(self):
-        """Método GUI para seleccionar los archivos pdf dentro de un directorio, compararlos con los patrones,
+        """Método GUI para seleccionar un directorio y comparar todos los archivos pdf que contiene con los patrones,
             renombrarlos y moverlos para archivar."""
 
         self.garch_magic('directory')

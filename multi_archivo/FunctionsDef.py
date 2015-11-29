@@ -33,14 +33,17 @@ def pdfatexto(arch_sel):
     logger.info("Archivo original Tipo: %s" % type(arch_sel))
     logger. debug("Archivo modo texto: %s" % filename)
 
+    # Si no existe el archivo indicado
     if not os.path.isfile(arch_sel):
         msg.error("No existe el archivo: %s" % file_orig)
         msg.print_tMsg()
         sys.exit()
+    # Si no hay un archivo pdf ya convertido con el mismo nombre en el destino => Convierto el archivo indicado
     elif not os.path.isfile(ruta_orig + filename):
         # subprocess.call(["df","-h","/home"])
         subprocess.call(["pdftotext", "-f", "1", "-l", "1", "-raw", arch_sel, str(ruta_orig + filename)])
         msg.info("Archivo: %s convertido a texto" % file_orig)
+    # Si llegó acá es porque ya existe un archivo convertido con el mismo nombre.
     else:
         msg.warning("El archivo: %s ya tiene un archivo convertido a texto con el mismo nombre" % file_orig)
 
