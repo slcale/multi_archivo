@@ -1,0 +1,23 @@
+[Desktop Entry]
+Type=Application
+Categories=Application;
+Terminal=false
+Name=multi_archivo.py
+Exec=<HOME>/.config/multi_archivo/venv/bin/multi_archivo
+Icon=/home/scale/Público_host/PyProjects/Multi_archivo_icon.png
+StartupWMClass=Tk
+
+X-Ayatana-Desktop-Shortcuts='Archivo pdf';'Disponible';
+
+Name[es_AR]=Multi_archivo
+
+['Archivo pdf' Shortcut Group]
+Name=Archivo pdf
+Exec=multi_archivo
+OnlyShowIn=Unity
+
+['Disponible' Shortcut Group]
+Name=Disponible
+Exec=multi_archivo.py -g -d $HOME
+OnlyShowIn=Unity
+

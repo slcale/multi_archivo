@@ -3,12 +3,47 @@
 __author__ = 'scale'
 __name__ == 'FunctionsDef'
 
-import sys,  subprocess, os, os.path, shutil, re
+import sys,  subprocess, os, errno, shutil, re
 import ClassTools as CT
 import logging
 
 # Establezco un objeto logger y su nombre
 logger = logging.getLogger(__name__)
+
+
+def check_path(spath, is_dir=False):
+    '''Función que evalúa si la ruta indicada existe y tiene permiso de escritura, sino la crea. Devuelve True o False
+
+    Argumentos:
+        spath -> Es el archivo con la ruta a evaluar
+        is_dir -> Por defecto False si la ruta a evaluar es de un archivo.
+            Si la ruta es un directorio lleva el valor True.
+    Ej.: path_exist('ruta/a/evaluar/archivo.txt')
+        path_exist('ruta/de/directorios', is_dir=True)
+    '''
+    try:
+        #os.path.exists(ruta_destino) and os.access(ruta_destino, os.W_OK)
+        # Si es la ruta de un archivo le saco la parte del archivo.
+        if not is_dir:
+            spath = os.path.dirname(spath)
+        #print "Try - spath: %s" % (spath)
+        # os.makedirs(path[, mode]). Default permission mode 0777
+        os.makedirs(spath)
+        mkout = True
+    except OSError, e:
+        mkout = False
+        if e.errno == errno.EEXIST:
+            logger.debug("Ya existe el directorio: %s" % spath)
+            # Verifico que tenga permiso de escritura
+            if os.access(spath, os.W_OK):
+                mkout = True
+            else:
+                logger.error("El directorio: %s no tiene permiso de escritura" % spath)
+        elif e.errno == errno.EACCES:
+            logger.error("No tiene permisos suficientes para crear o acceder al archivo o directorio: %s" % spath)
+        else:
+            logger.error("Error al crear o acceder al archivo o directorio - %s - %s" % (e.errno, os.strerror(e.errno)))
+    return mkout
 
 
 def pdfatexto(arch_sel):
@@ -31,7 +66,7 @@ def pdfatexto(arch_sel):
     logger.info("-- Convierto archivo pdf a texto")
     logger.info("Archivo original: %s" % arch_sel)
     logger.info("Archivo original Tipo: %s" % type(arch_sel))
-    logger. debug("Archivo modo texto: %s" % filename)
+    logger.debug("Archivo modo texto: %s" % filename)
 
     # Si no existe el archivo indicado
     if not os.path.isfile(arch_sel):
@@ -149,7 +184,7 @@ def arch_magic(general_dic, pattern_dic, arch_sel):
                 logger.debug('Tipo para subdirtxt_dest: %s - %s' % (type(subdirtxt_dest), subdirtxt_dest))
                 # Armo de a pedazos el nombre del subdirectorio destino.
                 for dkey in subdirtxt_dest:
-                    # Si es un entero el nombre corresponde al grupo regex, si al string definido en el archivo conf.
+                    # Si es un entero el nombre corresponde al grupo regex, sino al string definido en el archivo conf.
                     try:
                         dkey = int(dkey)
                         vdg = comp.group(dkey)
@@ -166,7 +201,7 @@ def arch_magic(general_dic, pattern_dic, arch_sel):
                 logger.info(' - Ruta destino: %s' % nueva_ruta_destino)
                 if not os.path.exists(nueva_ruta_destino):
                     # Verifico que el destino exista y tenga permiso de escritura
-                    if copia_destino and os.path.exists(ruta_destino) and os.access(ruta_destino, os.W_OK):
+                    if copia_destino and check_path(ruta_destino,is_dir=True):
                         os.makedirs(nueva_ruta_destino) # Creo el subdirectorio
 
                         logger.debug('Copio el archivo y los directorios adyacentes al subdirectorio destino.')
@@ -184,7 +219,6 @@ def arch_magic(general_dic, pattern_dic, arch_sel):
                             logger.info('\tDirectorios adyacentes copiados: %s' % ix_subd)
                     else:
                         msg.warning('Atención: El directorio destino no existe o no tengo permisos de escritura.')
-                        logger.info('Atención: El directorio destino no existe o no tengo permisos de escritura.')
                         group_all_ok = False
                 else:
                     msg.warning('Atención: Ya existe un archivo/directorio con el mismo nombre en el destino.')
